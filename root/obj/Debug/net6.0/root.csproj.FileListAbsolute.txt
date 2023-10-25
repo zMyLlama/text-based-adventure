@@ -1,0 +1,15 @@
+C:\Users\noelg\Documents\C#\text-based-adventure\root\bin\Debug\net6.0\root.exe
+C:\Users\noelg\Documents\C#\text-based-adventure\root\bin\Debug\net6.0\root.deps.json
+C:\Users\noelg\Documents\C#\text-based-adventure\root\bin\Debug\net6.0\root.runtimeconfig.json
+C:\Users\noelg\Documents\C#\text-based-adventure\root\bin\Debug\net6.0\root.dll
+C:\Users\noelg\Documents\C#\text-based-adventure\root\bin\Debug\net6.0\root.pdb
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.csproj.AssemblyReference.cache
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.AssemblyInfoInputs.cache
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.AssemblyInfo.cs
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.csproj.CoreCompileInputs.cache
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.dll
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\refint\root.dll
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.pdb
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\root.genruntimeconfig.cache
+C:\Users\noelg\Documents\C#\text-based-adventure\root\obj\Debug\net6.0\ref\root.dll

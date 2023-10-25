@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "WZPUG3tL1+HN1Nf+igfbPzGpFxLPZn10a/0NUVk6vYHxogJ27ORy6n2lbMZNyr+MS/XEEDgtKrkJNtXTHTdX6Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\noelg\\Documents\\C#\\text-based-adventure\\root\\root.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\noelg\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.16\\microsoft.netcore.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\noelg\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.16\\microsoft.windowsdesktop.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\noelg\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.16\\microsoft.aspnetcore.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\noelg\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.16\\microsoft.netcore.app.host.win-x64.6.0.16.nupkg.sha512"
+  ],
+  "logs": []
+}
