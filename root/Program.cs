@@ -1,3 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using root;
 
-Console.WriteLine("Hello, World!");
+Writer Writer = new Writer();
+
+Writer.WriteToPosition("Hej\nmed\ndig i spanden", WritePositions.CENTER);
