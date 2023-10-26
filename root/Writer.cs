@@ -5,12 +5,12 @@ public class Writer
     public void WriteToPosition(string message, WritePositions position = WritePositions.LEFT)
     {
         string[] messages = message.Split("\n");
+        
         foreach (string messagePiece in messages)
         {
-            int messageLength = Math.Clamp(messagePiece.Length, 0, Console.WindowWidth);
-            if (messagePiece.Length > Console.WindowWidth)
-                messagePiece.Split(messagePiece, Console.WindowWidth);
             
+            int messageLength = Math.Clamp(messagePiece.Length, 0, Console.WindowWidth);
+
             switch (position)
             {
                 case WritePositions.LEFT:
