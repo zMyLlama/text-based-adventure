@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 Writer Writer = new Writer();
 
+ScreenSize();
+
 Writer.WriteToPosition("\n\n    ,'\\\n_.----.     ____         ,'  _\\   ___    ___     ____\n_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n                                `'                            '-._|", WritePositions.CENTER);
 Writer.WriteToPosition("\n", WritePositions.CENTER);
 
@@ -39,4 +41,35 @@ void FlickerStart()
 void Start()
 {
     Writer.WriteToPosition("\nWelcome!\nType *anything* to begin!", WritePositions.CENTER);
+}
+
+void ScreenSize()
+{
+    ConsoleKeyInfo key;
+    while (true)
+    {
+        if (Console.WindowWidth < 120 || Console.WindowHeight < 30)
+        {
+            Writer.WriteToPosition("Make screen larger", WritePositions.CENTER);
+            Writer.WriteToPosition("Min Width: 120 \nMin Height: 30", WritePositions.CENTER);
+            Writer.WriteToPosition("Current Width: " + Console.WindowWidth, WritePositions.CENTER);
+            Writer.WriteToPosition("Current Height: " + Console.WindowHeight, WritePositions.CENTER);
+            Thread.Sleep(100);
+            Console.Clear();
+        }
+
+        if (Console.WindowWidth >= 120 && Console.WindowHeight >= 30)
+        {
+            Writer.WriteToPosition("Perfect Size! \nIf done press ENTER", WritePositions.CENTER);
+            Thread.Sleep(100);
+            Console.Clear();
+        }
+
+        if (Console.KeyAvailable)
+        {
+            if (Console.ReadKey(true).Key == ConsoleKey.Enter)
+                break;
+        }
+
+    }
 }
