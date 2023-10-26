@@ -1,3 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System.Diagnostics;
 
-Console.WriteLine("Hello, World!");
+while (true)
+{
+    if (Console.WindowWidth < 120 || Console.WindowHeight < 30)
+    {
+        Console.WriteLine("Make screen bigger!");
+        Thread.Sleep(100);
+        Console.Clear();
+    }
+}
