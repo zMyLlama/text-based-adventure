@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 Writer Writer = new Writer();
+Pokemon Pokemon = new Pokemon();
 
 ScreenSize();
 
@@ -41,6 +42,7 @@ void FlickerStart()
 void Start()
 {
     Writer.WriteToPosition("\nWelcome!\nType *anything* to begin!", WritePositions.CENTER);
+    Pokemon.PokemonWithStats(PokemonNames.BULBASAUR);
 }
 
 void ScreenSize()
