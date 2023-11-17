@@ -4,5 +4,7 @@ public enum WritePositions
 {
     LEFT,
     CENTER,
-    RIGHT
+    RIGHT,
+    MIDLEFT,
+    MIDRIGHT
 }
