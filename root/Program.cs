@@ -2,7 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 Writer Writer = new Writer();
+Renderer Renderer = new Renderer();
 
 ScreenSize();
 
@@ -40,7 +43,13 @@ void FlickerStart()
 
 void Start()
 {
-    Writer.WriteToPosition("\nWelcome!\nType *anything* to begin!", WritePositions.CENTER);
+    Renderer.Render();
+
+    while (true)
+    {
+        string? readLine = Console.ReadLine();
+        Renderer.Log("You typed:\n" + readLine, LogTypes.INFO);
+    }
 }
 
 void ScreenSize()
