@@ -5,12 +5,8 @@ namespace root;
 public class Pokemon
 {
     /*private Writer Writer = new Writer();*/
-    public MoveStats Move1 = new MoveStats();
-    public MoveStats Move2 = new MoveStats();
-    public MoveStats Move3 = new MoveStats();
-    public MoveStats Move4 = new MoveStats();
 
-    public PokemonMoves[] Moves = new PokemonMoves[4];
+    public List<PokemonMoves> Moves = new List<PokemonMoves>();
     
     public int hp;
     public int attack;
@@ -41,9 +37,9 @@ public class Pokemon
                 speed = 45;
                 firstElementType = Types.GRASS;
                 secondElementType = Types.POISON;
-                Moves[0] = PokemonMoves.GROWL;
-                Moves[1] = PokemonMoves.TACKLE;
-                Moves[2] = PokemonMoves.VINE_WHIP;
+                Moves.Add(PokemonMoves.GROWL);
+                Moves.Add(PokemonMoves.TACKLE);
+                Moves.Add(PokemonMoves.VINE_WHIP);
                 break;
             case PokemonNames.CHARMANDER:
                 name = "CHARMANDER";
@@ -52,9 +48,9 @@ public class Pokemon
                 defense = 43;
                 speed = 65;
                 firstElementType = Types.FIRE;
-                Moves[0] = PokemonMoves.GROWL;
-                Moves[1] = PokemonMoves.SCRATCH;
-                Moves[2] = PokemonMoves.EMBER;
+                Moves.Add(PokemonMoves.GROWL);
+                Moves.Add(PokemonMoves.SCRATCH);
+                Moves.Add(PokemonMoves.EMBER);
                 break;
             case PokemonNames.SQUIRTLE:
                 name = "SQUIRTLE";
@@ -63,9 +59,9 @@ public class Pokemon
                 defense = 65;
                 speed = 43;
                 firstElementType = Types.WATER;
-                Moves[0] = PokemonMoves.TAIL_WHIP;
-                Moves[1] = PokemonMoves.TACKLE;
-                Moves[2] = PokemonMoves.WATER_GUN;
+                Moves.Add(PokemonMoves.TAIL_WHIP);
+                Moves.Add(PokemonMoves.TACKLE);
+                Moves.Add(PokemonMoves.WATER_GUN);
                 break;
             case PokemonNames.CATERPIE:
                 name = "CATERPIE";
@@ -74,8 +70,8 @@ public class Pokemon
                 defense = 35;
                 speed = 45;
                 firstElementType = Types.BUG;
-                Moves[0] = PokemonMoves.STRING_SHOT;
-                Moves[1] = PokemonMoves.TACKLE;
+                Moves.Add(PokemonMoves.STRING_SHOT);
+                Moves.Add(PokemonMoves.TACKLE);
                 break;
             case PokemonNames.WEEDLE:
                 name = "WEEDLE";
@@ -85,8 +81,8 @@ public class Pokemon
                 speed = 50;
                 firstElementType = Types.BUG;
                 secondElementType = Types.POISON;
-                Moves[0] = PokemonMoves.POISON_STING;
-                Moves[1] = PokemonMoves.STRING_SHOT;
+                Moves.Add(PokemonMoves.POISON_STING);
+                Moves.Add(PokemonMoves.STRING_SHOT);
                 break;
             case PokemonNames.PIDGEY:
                 name = "PIDGEY";
@@ -96,9 +92,9 @@ public class Pokemon
                 speed = 56;
                 firstElementType = Types.NORMAL;
                 secondElementType = Types.FLYING;
-                Moves[0] = PokemonMoves.SAND_ATTACK;
-                Moves[1] = PokemonMoves.TACKLE;
-                Moves[2] = PokemonMoves.GUST;
+                Moves.Add(PokemonMoves.SAND_ATTACK);
+                Moves.Add(PokemonMoves.TACKLE);
+                Moves.Add(PokemonMoves.GUST);
                 break;
             case PokemonNames.RATTATA:
                 name = "RATTATA";
@@ -107,9 +103,9 @@ public class Pokemon
                 defense = 35;
                 speed = 72;
                 firstElementType = Types.NORMAL;
-                Moves[0] = PokemonMoves.QUICK_ATTACK;
-                Moves[1] = PokemonMoves.TACKLE;
-                Moves[2] = PokemonMoves.TAIL_WHIP;
+                Moves.Add(PokemonMoves.QUICK_ATTACK);
+                Moves.Add(PokemonMoves.TACKLE);
+                Moves.Add(PokemonMoves.TAIL_WHIP);
                 break;
             
         }

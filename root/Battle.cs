@@ -8,6 +8,7 @@ public class Battle
     private int oppoCurrentPokemon = 0;
 
     public MoveStats currentMove = new MoveStats();
+    public MoveStats oppoCurrentMove = new MoveStats();
     private PokemonMoves moveUsed;
 
     public bool ongoingBattle = true;
@@ -15,7 +16,10 @@ public class Battle
 
     private float firstDmgMultiplier = 1;
     private float secondDmgMultiplier = 1;
+    private float oppoFirstDmgMultiplier = 1;
+    private float oppoSecondDmgMultiplier = 1;
     private float criticalHit = 1;
+    private float oppoCriticalHit = 1;
     private int damage;
 
     public void Fight(List<Pokemon> OpponentPokemons, List<Pokemon> YourPokemons)
@@ -149,42 +153,56 @@ public class Battle
                 default: continue;
             }
 
-            if (currentMove.immuneAgainst.Contains(OpponentPokemons[oppoCurrentPokemon].firstElementType) || 
+            if (currentMove.immuneAgainst.Contains(OpponentPokemons[oppoCurrentPokemon].firstElementType) ||
                 currentMove.immuneAgainst.Contains(OpponentPokemons[oppoCurrentPokemon].secondElementType))
             {
                 firstDmgMultiplier = 0;
                 secondDmgMultiplier = 0;
             }
             else if (currentMove.strongAgainst.Contains(OpponentPokemons[oppoCurrentPokemon].firstElementType))
-            {
                 firstDmgMultiplier = 2;
-            }
             else if (currentMove.weakAgainst.Contains(OpponentPokemons[oppoCurrentPokemon].firstElementType))
-            {
                 firstDmgMultiplier = 0.5f;
-            }
             else
-            {
                 firstDmgMultiplier = 1;
-            }
 
             if (currentMove.strongAgainst.Contains(OpponentPokemons[oppoCurrentPokemon].secondElementType))
-            {
                 secondDmgMultiplier = 2;
-            }
             else if (currentMove.weakAgainst.Contains(OpponentPokemons[oppoCurrentPokemon].secondElementType))
-            {
                 secondDmgMultiplier = 0.5f;
-            }
             else
-            {
                 secondDmgMultiplier = 1;
+            
+            OpponentsMove(OpponentPokemons[oppoCurrentPokemon]);
+            if (oppoCurrentMove.immuneAgainst.Contains(YourPokemons[currentPokemon].firstElementType) ||
+                oppoCurrentMove.immuneAgainst.Contains(YourPokemons[currentPokemon].secondElementType))
+            {
+                oppoFirstDmgMultiplier = 0;
+                oppoSecondDmgMultiplier = 0;
             }
+            else if (oppoCurrentMove.strongAgainst.Contains(YourPokemons[currentPokemon].firstElementType))
+                oppoFirstDmgMultiplier = 2;
+            else if (oppoCurrentMove.weakAgainst.Contains(YourPokemons[currentPokemon].firstElementType))
+                oppoFirstDmgMultiplier = 0.5f;
+            else
+                oppoFirstDmgMultiplier = 1;
+
+            if (oppoCurrentMove.strongAgainst.Contains(YourPokemons[currentPokemon].secondElementType))
+                oppoSecondDmgMultiplier = 2;
+            else if (oppoCurrentMove.weakAgainst.Contains(YourPokemons[currentPokemon].secondElementType))
+                oppoSecondDmgMultiplier = 0.5f;
+            else
+                oppoSecondDmgMultiplier = 1;
 
             Random rnd = new Random();
             criticalHit = rnd.Next(1, 255);
             if (criticalHit < YourPokemons[currentPokemon].speed / 2)
                 criticalHit = 1.5f;
+            else
+                criticalHit = 1f;
+
+            if (criticalHit < OpponentPokemons[oppoCurrentPokemon].speed / 2)
+                oppoCriticalHit = 1.5f;
             else
                 criticalHit = 1f;
             
@@ -205,25 +223,35 @@ public class Battle
                     if(OpponentPokemons[oppoCurrentPokemon].hp <= 0)
                         break;
                     else
+                    {
+                        BattleInterface(OpponentPokemons[oppoCurrentPokemon], YourPokemons[currentPokemon]);
+                        Thread.Sleep(500); 
+                        BattleInterface(OpponentPokemons[oppoCurrentPokemon], YourPokemons[currentPokemon]);
                         damage =
                             Convert.ToInt16(
-                                ((2 * OpponentPokemons[oppoCurrentPokemon].level * criticalHit / 5 + 2) * currentMove.power * OpponentPokemons[oppoCurrentPokemon].attack /
+                                ((2 * OpponentPokemons[oppoCurrentPokemon].level * criticalHit / 5 + 2) * oppoCurrentMove.power * OpponentPokemons[oppoCurrentPokemon].attack /
                                     YourPokemons[currentPokemon].defense / 50 + 2) * 1 * firstDmgMultiplier * secondDmgMultiplier * 1);
+                    }
                     YourPokemons[currentPokemon].hp -= damage;
                     break;
                 case 2: //opponent attacks first
                     damage = 
                         Convert.ToInt16(
-                            ((2 * OpponentPokemons[oppoCurrentPokemon].level * criticalHit / 5 + 2) * currentMove.power * OpponentPokemons[oppoCurrentPokemon].attack /
+                            ((2 * OpponentPokemons[oppoCurrentPokemon].level * criticalHit / 5 + 2) * oppoCurrentMove.power * OpponentPokemons[oppoCurrentPokemon].attack /
                                 YourPokemons[currentPokemon].defense / 50 + 2) * 1 * firstDmgMultiplier * secondDmgMultiplier * 1);
                     YourPokemons[currentPokemon].hp -= damage;
                     if (YourPokemons[currentPokemon].hp <= 0)
                         break;
                     else
+                    {
+                        BattleInterface(OpponentPokemons[oppoCurrentPokemon], YourPokemons[currentPokemon]);
+                        Thread.Sleep(500);
+                        BattleInterface(OpponentPokemons[oppoCurrentPokemon], YourPokemons[currentPokemon]);
                         damage =
                             Convert.ToInt16(
                                 ((2 * YourPokemons[currentPokemon].level * criticalHit / 5 + 2) * currentMove.power * YourPokemons[currentPokemon].attack /
                                     OpponentPokemons[oppoCurrentPokemon].defense / 50 + 2) * 1 * firstDmgMultiplier * secondDmgMultiplier * 1);
+                    }
                     OpponentPokemons[oppoCurrentPokemon].hp -= damage;
                     break;
             }
@@ -233,8 +261,8 @@ public class Battle
             
             if (OpponentPokemons[oppoCurrentPokemon].hp <= 0)
             {
-                Thread.Sleep(2000);
                 Console.Clear();
+                Thread.Sleep(2000);
                 YouWin();
                 Thread.Sleep(2000);
                 Console.Clear();
@@ -258,8 +286,11 @@ public class Battle
         Console.WriteLine("You Win!");
     }
 
-    public void OpponentsMove()
+    public void OpponentsMove(Pokemon OpponentPokemon)
     {
-        
+        Random rnd = new Random();
+        int random = rnd.Next(0, OpponentPokemon.Moves.Count);
+
+        oppoCurrentMove.PokeMoves(OpponentPokemon.Moves[random]);
     }
 }
