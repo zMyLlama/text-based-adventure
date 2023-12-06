@@ -6,6 +6,7 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 Writer Writer = new Writer();
 Renderer Renderer = new Renderer();
+InputListener Listener = new InputListener(Renderer);
 
 ScreenSize();
 
@@ -43,13 +44,33 @@ void FlickerStart()
 
 void Start()
 {
+    Listener.Initialize();
+    
     Renderer.Render();
+    Listener.InputEvent += TestListenerCallback!;
 
     while (true)
     {
-        string? readLine = Console.ReadLine();
-        Renderer.Log("You typed:\n" + readLine, LogTypes.INFO);
+        /*string? readLine = Console.ReadLine();
+        Renderer.Log("You typed:\n" + readLine, LogTypes.INFO);*/
+
+        ConsoleKeyInfo readKey = Console.ReadKey(true);
+
+        /*InputEventArgs args = new InputEventArgs
+        {
+            Type = InputEventTypes.MOVE_FORWARD
+        };
+        Listener.TestEvent(args);*/
     }
+}
+
+void TestListenerCallback(object sender, InputEventArgs e)
+{
+    if (e.Type == InputEventTypes.RERENDER)
+    {
+        Renderer.Render();
+    }
+    Renderer.Log(e.Type.ToString(), LogTypes.INFO);
 }
 
 void ScreenSize()

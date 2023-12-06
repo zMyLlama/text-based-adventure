@@ -1,3 +1,5 @@
+using root.Maps;
+
 namespace root;
 
 public enum LogTypes
@@ -9,16 +11,44 @@ public enum LogTypes
 
 public class Renderer
 {
-    private readonly int _mainHeight = 25;
+    public readonly int MainHeight = 25;
     private readonly int _mainWidth = 60;
     private readonly string _logsHeader = "―――――――― OUTPUT ――――――――+";
     
     private readonly List<string> _logs = new List<string>();
+
+    private void DrawPlayer(int x, int y)
+    {
+        
+    }
+    
+    public void RenderMap()
+    {
+        Console.ForegroundColor = ConsoleColor.White;
+        int yOffset = 0;
+        for (int i = 0; i < RawMap.PALLET_TOWN.Count; i++)
+        {
+            Console.SetCursorPosition(1, 1 + yOffset);
+            Console.Write(RawMap.PALLET_TOWN[i].Substring(0, _mainWidth - 2));
+            yOffset++;
+        }
+        
+        ResetCursorToDefault();
+    }
+
+    public void ResetCursorToDefault()
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.SetCursorPosition(0, MainHeight + 2);
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, MainHeight + 2);
+        Console.Write("> ");
+    }
     
     public void Render(int x = 0, int y = 0)
     {
         Console.SetCursorPosition(0, 0);
-        for (int i = 0; i < _mainHeight; i++)
+        for (int i = 0; i < MainHeight; i++)
         {
             if (i == 0)
             {
@@ -30,7 +60,7 @@ public class Renderer
                 continue;
             }
 
-            if (i == _mainHeight - 1)
+            if (i == MainHeight - 1)
             {
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("+" + new String('―', _mainWidth - 1) + "+" + new string('―', _logsHeader.Length - 1) + "+");
@@ -46,6 +76,8 @@ public class Renderer
 
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("> ");
+        
+        RenderMap();
     }
 
     public void Log(string message, LogTypes type = LogTypes.DEFAULT)
@@ -79,7 +111,7 @@ public class Renderer
         {
             int xPos = 0;
             int yPos = prevHeight + 2;
-            if (yPos > _mainHeight - 2) break;
+            if (yPos > MainHeight - 2) break;
             string finalMessage = storedMessage + " (" + hourMinute + ")";
             for (int j = 0; j < finalMessage.Length; j++)
             {
@@ -93,7 +125,7 @@ public class Renderer
                 }
                 
                 Console.SetCursorPosition(_mainWidth + 2 + xPos, yPos);
-                if (yPos >= _mainHeight - 3 && xPos > _logsHeader.Length - 8)
+                if (yPos >= MainHeight - 4 && xPos > _logsHeader.Length - 8)
                 {
                     Console.Write("...");
                     break;
