@@ -7,16 +7,19 @@ using System.Threading.Tasks;
 Writer Writer = new Writer();
 Pokemon Pokemon = new Pokemon();
 MoveStats Moves = new MoveStats();
-Effectiveness multiplier = new Effectiveness();
+Effectiveness Multiplier = new Effectiveness();
+Battle Battle = new Battle();
 
 
 List<Pokemon> YourPokemons = new List<Pokemon>();
 List<Pokemon> OpponentPokemons = new List<Pokemon>();
 float criticalHit = 1f;
 
+YourPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
+OpponentPokemons.Insert(0,new Pokemon(PokemonNames.RATTATA));
 
 ScreenSize();
-Battle();
+Battle.Fight(OpponentPokemons, YourPokemons);
 
 Writer.WriteToPosition("\n\n    ,'\\\n_.----.     ____         ,'  _\\   ___    ___     ____\n_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n                                `'                            '-._|", WritePositions.CENTER);
 Writer.WriteToPosition("\n", WritePositions.CENTER);
@@ -92,9 +95,9 @@ void ScreenSize()
 
 }
 
-void Battle()
+/*void Battle()
 {
-    /*/*YourPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
+    YourPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
     OpponentPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
     
     BattleInterface();
@@ -109,19 +112,18 @@ void Battle()
                 criticalHit = 1.5f;
             else
                 criticalHit = 1f;
-            /*int damage = Convert.ToInt16(((2 * YourPokemons[0].level * criticalHit / 5 + 2) * YourPokemons[0].Move1.power * YourPokemons[0].attack / OpponentPokemons[0].defense / 50 + 2) * 1 * multiplier.Effective(YourPokemons[0].Move1.type,OpponentPokemons[0].type1) * 1 * 1);#2#
+            int damage = Convert.ToInt16(((2 * YourPokemons[0].level * criticalHit / 5 + 2) * YourPokemons[0].Move1.power * YourPokemons[0].attack / OpponentPokemons[0].defense / 50 + 2) * 1 * multiplier.Effective(YourPokemons[0].Move1.elementType,OpponentPokemons[0].firstElementType) * 1 * 1);
             OpponentPokemons[0].hp -= damage;
             Console.Clear();
-            BattleInterface();#1#
+            BattleInterface();
         }
-    }*/
-}
+    }
+}*/
 
-void BattleInterface()
+/*void BattleInterface()
 {
     Writer.WriteToPosition("" + OpponentPokemons[0].name,WritePositions.CENTER, false);
     Writer.WriteToPosition("HP: " + OpponentPokemons[0].hp + "\n\n\n\n\n" ,WritePositions.MIDLEFT);
     Writer.WriteToPosition("" + YourPokemons[0].name,WritePositions.LEFT, false);
     Writer.WriteToPosition("HP: " + YourPokemons[0].hp,WritePositions.MIDLEFT);
-
-}
+}*/

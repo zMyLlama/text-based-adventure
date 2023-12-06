@@ -2,7 +2,7 @@ namespace root;
 
 public class MoveStats
 {
-    public Types type;
+    public Types elementType;
     public int power;
     public int accuracy;
     public int pp;
@@ -19,7 +19,7 @@ public class MoveStats
         switch (move)
         {
             case PokemonMoves.TACKLE:
-                type = Types.NORMAL;
+                elementType = Types.NORMAL;
                 power = 35;
                 accuracy = 95;
                 pp = 35;
@@ -27,7 +27,7 @@ public class MoveStats
                 weakAgainst.Add(Types.ROCK);
                 break;
             case PokemonMoves.GUST:
-                type = Types.NORMAL;
+                elementType = Types.NORMAL;
                 power = 40;
                 accuracy = 100;
                 pp = 35;
@@ -35,8 +35,8 @@ public class MoveStats
                 weakAgainst.Add(Types.ROCK);
                 break;
             case PokemonMoves.EMBER:
-                type = Types.FIRE;
-                power = 40;
+                elementType = Types.FIRE;
+                power = 400;
                 accuracy = 100;
                 pp = 25;
                 strongAgainst.Add(Types.GRASS);
@@ -49,7 +49,7 @@ public class MoveStats
                 /*10% chance of burning opponent*/
                 break;
             case PokemonMoves.GROWL:
-                type = Types.NORMAL;
+                elementType = Types.NORMAL;
                 accuracy = 100;
                 pp = 40;
                 immuneAgainst.Add(Types.GHOST);
@@ -57,7 +57,7 @@ public class MoveStats
                 /*lowers oppenents attack by 1 stage*/
                 break;
             case PokemonMoves.BUBBLE:
-                type = Types.WATER;
+                elementType = Types.WATER;
                 power = 20;
                 accuracy = 100;
                 pp = 30;
@@ -70,7 +70,7 @@ public class MoveStats
                 /*10% chance of lowering opponent speed by 1 stage*/
                 break;
             case PokemonMoves.SCRATCH:
-                type = Types.NORMAL;
+                elementType = Types.NORMAL;
                 power = 40;
                 accuracy = 100;
                 pp = 35;
@@ -78,7 +78,7 @@ public class MoveStats
                 weakAgainst.Add(Types.ROCK);
                 break;
             case PokemonMoves.TAIL_WHIP:
-                type = Types.NORMAL;
+                elementType = Types.NORMAL;
                 accuracy = 100;
                 pp = 30;
                 immuneAgainst.Add(Types.GHOST);
@@ -86,7 +86,7 @@ public class MoveStats
                 /*lowers opponents defense by 1 stage*/
                 break;
             case PokemonMoves.VINE_WHIP:
-                type = Types.GRASS;
+                elementType = Types.GRASS;
                 power = 35;
                 accuracy = 100;
                 pp = 10;
@@ -101,7 +101,7 @@ public class MoveStats
                 weakAgainst.Add(Types.DRAGON);
                 break;
             case PokemonMoves.SAND_ATTACK:
-                type = Types.NORMAL;
+                elementType = Types.NORMAL;
                 accuracy = 100;
                 pp = 15;
                 immuneAgainst.Add(Types.GHOST);
@@ -109,7 +109,7 @@ public class MoveStats
                 /*lowers opponents accuracy by 1 stage*/
                 break;
             case PokemonMoves.STRING_SHOT:
-                type = Types.BUG;
+                elementType = Types.BUG;
                 accuracy = 95;
                 pp = 40;
                 strongAgainst.Add(Types.GRASS);
@@ -121,8 +121,8 @@ public class MoveStats
                 weakAgainst.Add(Types.GHOST);
                 /*lowers opponents speed by 1 stage*/
                 break;
-            case PokemonMoves.POSION_STING:
-                type = Types.POISON;
+            case PokemonMoves.POISON_STING:
+                elementType = Types.POISON;
                 power = 15;
                 accuracy = 100;
                 pp = 35;
@@ -135,13 +135,25 @@ public class MoveStats
                 /*30% chance of poisoning opponent*/
                 break;
             case PokemonMoves.QUICK_ATTACK:
-                type = Types.NORMAL;
+                elementType = Types.NORMAL;
                 power = 40;
                 accuracy = 100;
                 pp = 30;
                 immuneAgainst.Add(Types.GHOST);
                 weakAgainst.Add(Types.ROCK);
                 /*this move has +1 priority, meaning it will go before other moves with less priority*/
+                break;
+            case PokemonMoves.WATER_GUN:
+                elementType = Types.WATER;
+                power = 40;
+                accuracy = 100;
+                pp = 25;
+                strongAgainst.Add(Types.FIRE);
+                strongAgainst.Add(Types.GROUND);
+                strongAgainst.Add(Types.ROCK);
+                weakAgainst.Add(Types.WATER);
+                weakAgainst.Add(Types.GRASS);
+                weakAgainst.Add(Types.DRAGON);
                 break;
         }
     }
