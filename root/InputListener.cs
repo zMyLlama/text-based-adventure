@@ -4,6 +4,8 @@ public enum InputEventTypes
 {
     MOVEFORWARDS,
     MOVEBACKWARDS,
+    MOVERIGHT,
+    MOVELEFT,
     BATTLE,
     RERENDER,
 }
@@ -45,21 +47,22 @@ public class InputListener
             
             string primaryAction = actions[0];
             string? actionArg = null;
-            if (InputEventsClass.Dictionary.ContainsKey(actions[0] + actions[1]))
+            if (actions.Length >= 2)
             {
-                primaryAction = actions[0] + actions[1];
-                for (int i = 2; i < actions.Length; i++)
+                int getArgsFrom = 1;
+                if (InputEventsClass.Dictionary.ContainsKey(actions[0] + actions[1]))
                 {
-                    actionArg += actions[i];
-                    if (i != actions.Length - 1) actionArg += " ";
+                    primaryAction = actions[0] + actions[1];
+                    getArgsFrom = 2;
                 }
-            }
-            else
-            {
-                for (int i = 1; i < actions.Length; i++)
+
+                if (getArgsFrom >= actions.Length - 1)
                 {
-                    actionArg += actions[i];
-                    if (i != actions.Length - 1) actionArg += " ";
+                    for (int i = getArgsFrom; i < actions.Length; i++)
+                    {
+                        actionArg += actions[i];
+                        if (i != actions.Length - 1) actionArg += " ";
+                    }
                 }
             }
 

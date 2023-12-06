@@ -14,26 +14,43 @@ public class Renderer
     public readonly int MainHeight = 25;
     private readonly int _mainWidth = 60;
     private readonly string _logsHeader = "―――――――― OUTPUT ――――――――+";
-    
+
+    private Player _player;
     private readonly List<string> _logs = new List<string>();
 
-    private void DrawPlayer(int x, int y)
+    public void SetPlayer(Player player)
     {
+        _player = player;
+    }
+
+    public void RenderPlayer()
+    {
+        Console.SetCursorPosition(_player.xPosition + 1, _player.yPosition + 1);
+        Console.Write('P');
         
+        ResetCursorToDefault();
     }
     
     public void RenderMap()
     {
+        int mapXOffset = _player.xPosition;
+        if (_player.xPosition < (_mainWidth - 2) / 2)
+        {
+            mapXOffset = 0;
+            
+        }
+        
         Console.ForegroundColor = ConsoleColor.White;
         int yOffset = 0;
         for (int i = 0; i < RawMap.PALLET_TOWN.Count; i++)
         {
             Console.SetCursorPosition(1, 1 + yOffset);
-            Console.Write(RawMap.PALLET_TOWN[i].Substring(0, _mainWidth - 2));
+            Console.Write(RawMap.PALLET_TOWN[i].Substring(mapXOffset, _mainWidth - 2));
             yOffset++;
         }
         
         ResetCursorToDefault();
+        RenderPlayer();
     }
 
     public void ResetCursorToDefault()
@@ -145,6 +162,6 @@ public class Renderer
         }
 
         Console.ForegroundColor = savedConsoleColor;
-        Console.SetCursorPosition(savedCaretXPos, savedCaretYPos);
+        ResetCursorToDefault();
     }
 }

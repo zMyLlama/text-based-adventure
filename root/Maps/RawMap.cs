@@ -4,19 +4,19 @@ public static class RawMap
 {
     public static List<string> PALLET_TOWN = new List<string>()
     {
-        "                                                                                                    ",
-        "             ;;;;;;;;                          ___                                                  ",
-        "           ;;;;;;;;;;;;;;                     /   \\                                                ",
-        "                ;;;;;;                       /     \\                                               ",
-        "                                             | D W |                                                ",
-        "                                             |_D___|                                                ",
-        "                                                                                                    ",
-        "                                                                                                    ",
-        "                                                                   ;;;;;;;;;;;;;;;                  ",
-        "                                                                     ;;;;;;;                        ",
-        "                                                                  ;;;;;;;;;;;;;                     ",
-        "                                                                                                    ",
-        "               ;;;;;;;;;;;;;;;                                                                      ",
-        "                    ;;;;;;;;                                                                        ",
+        "                                                                                              HHHHHH",
+        "             ;;;;;;;;                          ___                                            HHHHHH",
+        "           ;;;;;;;;;;;;;;                     /   \\                                           HHHHH",
+        "                ;;;;;;                       /     \\                                          HHHHH",
+        "                                             | D W |                                          HHHHHH",
+        "                                             |_D___|                                          HHHHHH",
+        "                                                                                              HHHHHH",
+        "                                                                                              HHHHHH",
+        "                                                                   ;;;;;;;;;;;;;;;            HHHHHH",
+        "                                                                     ;;;;;;;                  HHHHHH",
+        "                                                                  ;;;;;;;;;;;;;               HHHHHH",
+        "                                                                                              HHHHHH",
+        "               ;;;;;;;;;;;;;;;                                                                HHHHHH",
+        "                    ;;;;;;;;                                                                  HHHHHH",
     };
 }

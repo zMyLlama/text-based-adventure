@@ -7,6 +7,9 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 Writer Writer = new Writer();
 Renderer Renderer = new Renderer();
 InputListener Listener = new InputListener(Renderer);
+Player Player = new Player(Renderer);
+
+Renderer.SetPlayer(Player);
 
 ScreenSize();
 
@@ -47,29 +50,39 @@ void Start()
     Listener.Initialize();
     
     Renderer.Render();
-    Listener.InputEvent += TestListenerCallback!;
+    Listener.InputEvent += Movement!;
 
-    while (true)
-    {
-        /*string? readLine = Console.ReadLine();
-        Renderer.Log("You typed:\n" + readLine, LogTypes.INFO);*/
-
-        ConsoleKeyInfo readKey = Console.ReadKey(true);
-
-        /*InputEventArgs args = new InputEventArgs
-        {
-            Type = InputEventTypes.MOVE_FORWARD
-        };
-        Listener.TestEvent(args);*/
-    }
+    while (true) { ConsoleKeyInfo readKey = Console.ReadKey(true); }
 }
 
-void TestListenerCallback(object sender, InputEventArgs e)
+void Movement(object sender, InputEventArgs e)
 {
-    if (e.Type == InputEventTypes.RERENDER)
+    e.Arg ??= "1";
+    if (!int.TryParse(e.Arg, out int offsetArg))
     {
-        Renderer.Render();
+        Renderer.Log("Du kan ikke rykke dig den angivne distance", LogTypes.ERROR);
+        return;
     }
+
+    offsetArg = Math.Clamp(offsetArg, 1, 10);
+    
+    //Renderer.Log("CALLED: " + e.Arg.ToString());
+    switch (e.Type)
+    {
+        case InputEventTypes.MOVEFORWARDS:
+            Player.Move(0, offsetArg);
+            break;
+        case InputEventTypes.MOVEBACKWARDS:
+            Player.Move(0, -offsetArg);
+            break;
+        case InputEventTypes.MOVELEFT:
+            Player.Move(-offsetArg, 0);
+            break;
+        case InputEventTypes.MOVERIGHT:
+            Player.Move(offsetArg, 0);
+            break;
+    }
+    
     Renderer.Log(e.Type.ToString(), LogTypes.INFO);
 }
 
