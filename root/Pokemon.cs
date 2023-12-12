@@ -9,6 +9,7 @@ public class Pokemon
     public List<PokemonMoves> Moves = new List<PokemonMoves>();
     
     public int hp;
+    public int maxHP;
     public int attack;
     public int defense;
     public int speed;
@@ -32,6 +33,7 @@ public class Pokemon
             case PokemonNames.BULBASAUR:
                 name = "BULBASAUR";
                 hp = 45;
+                maxHP = 45;
                 attack = 49;
                 defense = 49;
                 speed = 45;
@@ -44,6 +46,7 @@ public class Pokemon
             case PokemonNames.CHARMANDER:
                 name = "CHARMANDER";
                 hp = 39;
+                maxHP = 39;
                 attack = 52;
                 defense = 43;
                 speed = 65;
@@ -55,6 +58,7 @@ public class Pokemon
             case PokemonNames.SQUIRTLE:
                 name = "SQUIRTLE";
                 hp = 44;
+                maxHP = 44;
                 attack = 48;
                 defense = 65;
                 speed = 43;
@@ -66,6 +70,7 @@ public class Pokemon
             case PokemonNames.CATERPIE:
                 name = "CATERPIE";
                 hp = 45;
+                maxHP = 45;
                 attack = 30;
                 defense = 35;
                 speed = 45;
@@ -76,6 +81,7 @@ public class Pokemon
             case PokemonNames.WEEDLE:
                 name = "WEEDLE";
                 hp = 40;
+                maxHP = 40;
                 attack = 35;
                 defense = 30;
                 speed = 50;
@@ -87,6 +93,7 @@ public class Pokemon
             case PokemonNames.PIDGEY:
                 name = "PIDGEY";
                 hp = 40;
+                maxHP = 40;
                 attack = 45;
                 defense = 40;
                 speed = 56;
@@ -99,6 +106,7 @@ public class Pokemon
             case PokemonNames.RATTATA:
                 name = "RATTATA";
                 hp = 30;
+                maxHP = 30;
                 attack = 56;
                 defense = 35;
                 speed = 72;
@@ -113,6 +121,7 @@ public class Pokemon
         Random rnd = new Random();
         level = rnd.Next(2, 7);
         hp = Convert.ToInt16(rnd.Next(90, 110) / 100f * hp);
+        maxHP = hp;
         attack = Convert.ToInt16(rnd.Next(90, 110) / 100f * attack);
         defense = Convert.ToInt16(rnd.Next(90, 110) / 100f * defense);
         speed = Convert.ToInt16(rnd.Next(90, 110) / 100f * speed);
