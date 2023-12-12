@@ -1,4 +1,5 @@
 ﻿using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using root;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,13 +14,11 @@ Battle Battle = new Battle();
 
 List<Pokemon> YourPokemons = new List<Pokemon>();
 List<Pokemon> OpponentPokemons = new List<Pokemon>();
-float criticalHit = 1f;
 
-OpponentPokemons.Insert(0, new Pokemon(PokemonNames.CATERPIE));
-YourPokemons.Insert(0, new Pokemon(PokemonNames.CHARMANDER));
+
 
 ScreenSize();
-Battle.Fight(OpponentPokemons, YourPokemons);
+/*Battle.Fight(OpponentPokemons, YourPokemons);*/
 
 Writer.WriteToPosition("\n\n    ,'\\\n_.----.     ____         ,'  _\\   ___    ___     ____\n_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n                                `'                            '-._|", WritePositions.CENTER);
 Writer.WriteToPosition("\n", WritePositions.CENTER);
@@ -55,12 +54,7 @@ void FlickerStart()
 
 void Start()
 {
-    Writer.WriteToPosition("\nWelcome!\nType *anything* to begin!", WritePositions.CENTER);
-
-    /*Pokemon.PokemonWithStats(PokemonNames.BULBASAUR);
-    int damage = Convert.ToInt16(2f + 0.4f * Pokemon.level * Pokemon.attack * Moves.power / Pokemon.defense / 50f + 2f);
-    Writer.WriteToPosition("Damage: " + damage,WritePositions.LEFT);*/
-
+    SelectStarterPokemon();
 }
 
 void ScreenSize()
@@ -90,7 +84,30 @@ void ScreenSize()
             if (Console.ReadKey(true).Key == ConsoleKey.Enter)
                 break;
         }
-
     }
 
+}
+
+void SelectStarterPokemon()
+{
+    Console.SetCursorPosition(0,0);
+    Writer.WriteToPosition("Welcome to Pokémon\nChoose your starter Pokémon!\n", WritePositions.CENTER);
+    Writer.WriteToPosition("Bulbasaur", WritePositions.MIDLEFT, false);
+    Writer.WriteToPosition("Charmander", WritePositions.CENTER, false);
+    Writer.WriteToPosition("Squirtle", WritePositions.MIDRIGHT);
+    string choice = Console.ReadLine().ToLower();
+    switch (choice)
+    {
+        case "bulbasaur":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.BULBASAUR));
+            break;
+        case "charmander":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.CHARMANDER));
+            break;
+        case "squirtle":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.SQUIRTLE));
+            break;
+        default: SelectStarterPokemon();
+            break;
+    }
 }
