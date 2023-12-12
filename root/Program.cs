@@ -15,9 +15,11 @@ List<Pokemon> YourPokemons = new List<Pokemon>();
 List<Pokemon> OpponentPokemons = new List<Pokemon>();
 float criticalHit = 1f;
 
+OpponentPokemons.Insert(0, new Pokemon(PokemonNames.CATERPIE));
+YourPokemons.Insert(0, new Pokemon(PokemonNames.CHARMANDER));
 
 ScreenSize();
-/*Battle.Fight(OpponentPokemons, YourPokemons);*/
+Battle.Fight(OpponentPokemons, YourPokemons);
 
 Writer.WriteToPosition("\n\n    ,'\\\n_.----.     ____         ,'  _\\   ___    ___     ____\n_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n                                `'                            '-._|", WritePositions.CENTER);
 Writer.WriteToPosition("\n", WritePositions.CENTER);
