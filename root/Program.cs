@@ -1,4 +1,5 @@
 ﻿using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using root;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,13 +14,10 @@ Battle Battle = new Battle();
 
 List<Pokemon> YourPokemons = new List<Pokemon>();
 List<Pokemon> OpponentPokemons = new List<Pokemon>();
-float criticalHit = 1f;
 
-YourPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
-OpponentPokemons.Insert(0,new Pokemon(PokemonNames.RATTATA));
 
 ScreenSize();
-Battle.Fight(OpponentPokemons, YourPokemons);
+/*Battle.Fight(OpponentPokemons, YourPokemons);*/
 
 Writer.WriteToPosition("\n\n    ,'\\\n_.----.     ____         ,'  _\\   ___    ___     ____\n_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n                                `'                            '-._|", WritePositions.CENTER);
 Writer.WriteToPosition("\n", WritePositions.CENTER);
@@ -55,12 +53,7 @@ void FlickerStart()
 
 void Start()
 {
-    Writer.WriteToPosition("\nWelcome!\nType *anything* to begin!", WritePositions.CENTER);
-
-    /*Pokemon.PokemonWithStats(PokemonNames.BULBASAUR);
-    int damage = Convert.ToInt16(2f + 0.4f * Pokemon.level * Pokemon.attack * Moves.power / Pokemon.defense / 50f + 2f);
-    Writer.WriteToPosition("Damage: " + damage,WritePositions.LEFT);*/
-
+    SelectStarterPokemon();
 }
 
 void ScreenSize()
@@ -90,40 +83,29 @@ void ScreenSize()
             if (Console.ReadKey(true).Key == ConsoleKey.Enter)
                 break;
         }
-
     }
-
 }
 
-/*void Battle()
+void SelectStarterPokemon()
 {
-    YourPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
-    OpponentPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
-    
-    BattleInterface();
-    while (OpponentPokemons[0].hp > 0)
+    Console.SetCursorPosition(0,0);
+    Writer.WriteToPosition("Welcome to Pokémon\nChoose your starter Pokémon!\n", WritePositions.CENTER);
+    Writer.WriteToPosition("Bulbasaur", WritePositions.MIDLEFT, false);
+    Writer.WriteToPosition("Charmander", WritePositions.CENTER, false);
+    Writer.WriteToPosition("Squirtle", WritePositions.MIDRIGHT);
+    string choice = Console.ReadLine().ToLower();
+    switch (choice)
     {
-        string command = Console.ReadLine();
-        if (command == "tackle")
-        {
-            Random rnd = new Random();
-            criticalHit = rnd.Next(1 , 255);
-            if (criticalHit < YourPokemons[0].speed / 2)
-                criticalHit = 1.5f;
-            else
-                criticalHit = 1f;
-            int damage = Convert.ToInt16(((2 * YourPokemons[0].level * criticalHit / 5 + 2) * YourPokemons[0].Move1.power * YourPokemons[0].attack / OpponentPokemons[0].defense / 50 + 2) * 1 * multiplier.Effective(YourPokemons[0].Move1.elementType,OpponentPokemons[0].firstElementType) * 1 * 1);
-            OpponentPokemons[0].hp -= damage;
-            Console.Clear();
-            BattleInterface();
-        }
+        case "bulbasaur":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.BULBASAUR));
+            break;
+        case "charmander":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.CHARMANDER));
+            break;
+        case "squirtle":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.SQUIRTLE));
+            break;
+        default: SelectStarterPokemon();
+            break;
     }
-}*/
-
-/*void BattleInterface()
-{
-    Writer.WriteToPosition("" + OpponentPokemons[0].name,WritePositions.CENTER, false);
-    Writer.WriteToPosition("HP: " + OpponentPokemons[0].hp + "\n\n\n\n\n" ,WritePositions.MIDLEFT);
-    Writer.WriteToPosition("" + YourPokemons[0].name,WritePositions.LEFT, false);
-    Writer.WriteToPosition("HP: " + YourPokemons[0].hp,WritePositions.MIDLEFT);
-}*/
+}
