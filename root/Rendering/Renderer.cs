@@ -1,3 +1,4 @@
+using root.Helpers;
 using root.Maps;
 
 namespace root;
@@ -12,7 +13,7 @@ public enum LogTypes
 public class Renderer
 {
     public readonly int MainHeight = 25;
-    private readonly int _mainWidth = 60;
+    public readonly int MainWidth = 60;
     private readonly string _logsHeader = "―――――――― OUTPUT ――――――――+";
 
     private Player _player;
@@ -23,9 +24,13 @@ public class Renderer
         _player = player;
     }
 
-    public void RenderPlayer()
+    public void RenderPlayer(bool noBoundry, bool rightBoundry)
     {
-        Console.SetCursorPosition(_player.xPosition + 1, _player.yPosition + 1);
+        Console.SetCursorPosition(
+            noBoundry ? (MainWidth - 2) / 2 : !rightBoundry ? _player.xPosition + 1 :
+            (MainWidth - 2) - (RawMap.PALLET_TOWN[0].Length - (_player.xPosition + 1)), 
+            _player.yPosition + 1
+        );
         Console.Write('P');
         
         ResetCursorToDefault();
@@ -33,24 +38,21 @@ public class Renderer
     
     public void RenderMap()
     {
-        int mapXOffset = _player.xPosition;
-        if (_player.xPosition < (_mainWidth - 2) / 2)
-        {
-            mapXOffset = 0;
-            
-        }
+        int min = 0;
+        int max = RawMap.PALLET_TOWN[0].Length - (MainWidth - 2);
+        int xOffset = Math.Clamp(_player.xPosition - (MainWidth - 2) / 2, min, max);
         
         Console.ForegroundColor = ConsoleColor.White;
         int yOffset = 0;
         for (int i = 0; i < RawMap.PALLET_TOWN.Count; i++)
         {
             Console.SetCursorPosition(1, 1 + yOffset);
-            Console.Write(RawMap.PALLET_TOWN[i].Substring(mapXOffset, _mainWidth - 2));
+            Console.Write(RawMap.PALLET_TOWN[i].Substring(xOffset, MainWidth - 2));
             yOffset++;
         }
         
         ResetCursorToDefault();
-        RenderPlayer();
+        RenderPlayer(xOffset != min && xOffset != max, xOffset == max);
     }
 
     public void ResetCursorToDefault()
@@ -73,19 +75,19 @@ public class Renderer
                 const string cityState = "PALLET TOWN";
                 
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("+―――― " + cityState + ' ' + new string('―', _mainWidth - (7 + cityState.Length)) + "+" + _logsHeader);
+                Console.WriteLine("+―――― " + cityState + ' ' + new string('―', MainWidth - (7 + cityState.Length)) + "+" + _logsHeader);
                 continue;
             }
 
             if (i == MainHeight - 1)
             {
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("+" + new String('―', _mainWidth - 1) + "+" + new string('―', _logsHeader.Length - 1) + "+");
+                Console.WriteLine("+" + new String('―', MainWidth - 1) + "+" + new string('―', _logsHeader.Length - 1) + "+");
                 continue;
             }
             
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("|{0," + (_mainWidth + _logsHeader.Length) + "}", "|" + new string(' ', _logsHeader.Length - 1) + "|");
+            Console.WriteLine("|{0," + (MainWidth + _logsHeader.Length) + "}", "|" + new string(' ', _logsHeader.Length - 1) + "|");
         }
 
         Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -141,7 +143,7 @@ public class Renderer
                     continue;
                 }
                 
-                Console.SetCursorPosition(_mainWidth + 2 + xPos, yPos);
+                Console.SetCursorPosition(MainWidth + 2 + xPos, yPos);
                 if (yPos >= MainHeight - 4 && xPos > _logsHeader.Length - 8)
                 {
                     Console.Write("...");
