@@ -1,5 +1,9 @@
 ﻿using root;
 
+/*
+ * Initializes the needed classes for the game to work.
+ * Kind of like making a bunch of empty helpers in unity.
+ */
 Writer Writer = new Writer();
 Renderer Renderer = new Renderer();
 Player Player = new Player(Renderer);
@@ -16,7 +20,6 @@ Writer.WriteToPosition("\n", WritePositions.CENTER);
 CancellationTokenSource cts = new CancellationTokenSource();
 Task flickerStartTask = new Task(FlickerStart, cts.Token);
 Battle currentBattle;
-BattleInterface currentBattleInterface;
 flickerStartTask.Start();
 
 while (!flickerStartTask.IsCompleted)
@@ -134,9 +137,9 @@ void ScreenSize()
     }
 }
 
-void SelectStarterPokemon()
+/*void SelectStarterPokemon()
 {
-    /*Console.SetCursorPosition(0,0);
+    Console.SetCursorPosition(0,0);
     Writer.WriteToPosition("Welcome to Pokémon\nChoose your starter Pokémon!\n", WritePositions.CENTER);
     Writer.WriteToPosition("Bulbasaur", WritePositions.MIDRIGHT, false);
     Writer.WriteToPosition("Charmander", WritePositions.CENTER, false);
@@ -155,5 +158,5 @@ void SelectStarterPokemon()
             break;
         default: SelectStarterPokemon();
             break;
-    }*/
-}
+    }
+}*/
