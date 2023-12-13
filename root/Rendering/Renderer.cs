@@ -23,38 +23,58 @@ public class Renderer
     {
         _player = player;
     }
-
-    public void RenderPlayer(bool noBoundry, bool rightBoundry)
+    
+    private void RenderPlayer(bool noXBoundry, bool rightXBoundry, bool noYBoundry, bool bottomYBoundry)
     {
+        /*
+         * When rendering the player in the center of the scene, then we cant offset both the map position and player as this would cause a double offset making a sort of parallax effect
+         * To circumvent this we pass in variables depending on what bounding box of the map we are hitting. If the camera isnt being bound then we just place the player in the middle of the screen.
+         * If the camera is hitting the bounding box of the map, then we do some fancy math to properly position the player.
+         * This way we can keep the player position in world space, meaning that the player's x can be 100 instead of being bound by the viewport size of ~60.
+         * In this way we can easily look up the surrounding characters of the player, allowing us to easily implement dialog interactions.
+         */
         Console.SetCursorPosition(
-            noBoundry ? (MainWidth - 2) / 2 : !rightBoundry ? _player.xPosition + 1 :
+            noXBoundry ? (MainWidth - 2) / 2 : !rightXBoundry ? _player.xPosition + 1 :
             (MainWidth - 2) - (RawMap.PALLET_TOWN[0].Length - (_player.xPosition + 1)), 
-            _player.yPosition + 1
+            noYBoundry ? (MainHeight - 2) / 2 : !bottomYBoundry ? _player.yPosition + 1 : 
+            (MainHeight - 2) - (RawMap.PALLET_TOWN.Count - (_player.yPosition + 1))
         );
         Console.Write('P');
         
         ResetCursorToDefault();
     }
     
-    public void RenderMap()
+    /// <summary>
+    /// Renders the current selected map to the viewport of the scene, based on the players current coordinates.
+    /// </summary>
+    /// <remarks>If possible then positions the camera in the center of the player</remarks>
+    public void RenderCurrentScene()
     {
-        int min = 0;
-        int max = RawMap.PALLET_TOWN[0].Length - (MainWidth - 2);
-        int xOffset = Math.Clamp(_player.xPosition - (MainWidth - 2) / 2, min, max);
+        int xyMin = 0;
+        int xMax = RawMap.PALLET_TOWN[0].Length - (MainWidth - 2);
+        int yMax = RawMap.PALLET_TOWN.Count - (MainHeight - 2);
+        int xOffset = Math.Clamp(_player.xPosition - (MainWidth - 2) / 2, xyMin, xMax);
+        int yOffset = Math.Clamp(_player.yPosition - (MainHeight - 2) / 2, xyMin, yMax);
+        /*
+         * Noticed that we subtract 2 often? Thats because the MainWidth also includes the borders, which in this case arent needed, hence the removal of the 2 character border.
+         */
         
         Console.ForegroundColor = ConsoleColor.White;
-        int yOffset = 0;
-        for (int i = 0; i < RawMap.PALLET_TOWN.Count; i++)
+        int cursorYOffset = 0;
+        for (int i = 0; i < MainHeight - 2; i++)
         {
-            Console.SetCursorPosition(1, 1 + yOffset);
-            Console.Write(RawMap.PALLET_TOWN[i].Substring(xOffset, MainWidth - 2));
-            yOffset++;
+            Console.SetCursorPosition(1, 1 + cursorYOffset);
+            Console.Write(RawMap.PALLET_TOWN[i + yOffset].Substring(xOffset, MainWidth - 2));
+            cursorYOffset++;
         }
         
         ResetCursorToDefault();
-        RenderPlayer(xOffset != min && xOffset != max, xOffset == max);
+        RenderPlayer(xOffset != xyMin && xOffset != xMax, xOffset == xMax, yOffset != xyMin && yOffset != yMax, yOffset == yMax);
     }
 
+    /// <summary>
+    /// Resets the consle cursor position to the default input field.
+    /// </summary>
     public void ResetCursorToDefault()
     {
         Console.ForegroundColor = ConsoleColor.Green;
@@ -73,6 +93,12 @@ public class Renderer
         }
     }
     
+    /// <summary>
+    /// Renders the entire game to the console, this includes the frame and map.
+    /// </summary>
+    /// <param name="onlyFrame">An optional boolean telling the renderer to only render the frame and not the scene</param>
+    /// <param name="alsoRenderLogs">An optional boolean forcing the renderer to also rerender the logs</param>
+    /// <remarks>Forcing logs to render shouldnt be used unless necessary</remarks>
     public void Render(bool onlyFrame = false, bool alsoRenderLogs = false)
     {
         Console.SetCursorPosition(0, 0);
@@ -110,15 +136,20 @@ public class Renderer
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("> ");
         
-        if (!onlyFrame) RenderMap();
+        if (!onlyFrame) RenderCurrentScene();
         if (alsoRenderLogs) RenderLogs(Console.ForegroundColor);
     }
 
+    /// <summary>
+    /// Renders all possibe logs that are currently stored in the system
+    /// </summary>
+    /// <param name="restoreColor">A console color to restore to after the operation is done</param>
     public void RenderLogs(ConsoleColor restoreColor)
     {
         if (_logs.Count == 0) return;
         int prevHeight = -1;
         
+        // BUG: Will probably break if the message is less than 3 characters
         switch (_logs[0].Substring(0, 3))
         {
             case "(?)":
@@ -137,15 +168,14 @@ public class Renderer
             int xPos = 0;
             int yPos = prevHeight + 2;
             if (yPos > MainHeight - 2) break;
-            string finalMessage = storedMessage;
-            for (int j = 0; j < finalMessage.Length; j++)
+            for (int j = 0; j < storedMessage.Length; j++)
             {
-                char messagePiece = finalMessage[j];
+                char messagePiece = storedMessage[j];
                 if (messagePiece == '\n')
                 {
                     prevHeight += 1;
                     yPos += 1;
-                    xPos = finalMessage[j + 1] == ' ' ? -1 : 0;
+                    xPos = storedMessage[j + 1] == ' ' ? -1 : 0;
                     continue;
                 }
                 
@@ -162,7 +192,7 @@ public class Renderer
                 
                 prevHeight += 1;
                 yPos += 1;
-                xPos = finalMessage[j + 1] == ' ' ? -1 : 0;
+                xPos = storedMessage[j + 1] == ' ' ? -1 : 0;
             }
             
             Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -173,6 +203,13 @@ public class Renderer
         ResetCursorToDefault();
     }
 
+    /// <summary>
+    /// Adds a log to the system and automatically renders it to the console.
+    /// Rerenders the frame to clear previous logs.
+    /// </summary>
+    /// <param name="message">The message to log to the user</param>
+    /// <param name="type">The importance / relevance of the message. Changes the color and adds a symbol depending on the type</param>
+    /// <param name="onlyFrame">Makes the rerender only render the frame. Useful for when you want to keep the content of the viewport intact</param>
     public void Log(string message, LogTypes type = LogTypes.DEFAULT, bool onlyFrame = false)
     {
         Render(onlyFrame);

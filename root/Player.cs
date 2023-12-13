@@ -32,7 +32,7 @@ public class Player
          */
         List<char> nonColliders = new List<char>()
         {
-            ' ', ';', 'P'
+            ' ', ';', 'P', '.'
         };
         return !nonColliders.Contains(currentMap[Math.Clamp(y, 0, currentMap.Count - 1)][Math.Clamp(x, 0, currentMap[0].Length)]);
     }

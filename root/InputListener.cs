@@ -81,10 +81,10 @@ public class InputListener
         _renderer = renderer;
     }
     
-    /*
-     * Initializes the class only if it hasnt been initialized before.
-     * Makes a new cancellation token and task, making it possible to terminate the task later.
-     */
+    /// <summary>
+    /// Initializes the class only if it hasnt been initialized before.
+    /// Makes a new cancellation token and task, making it possible to terminate input detection later by calling Input.Terminate().
+    /// </summary>
     public void Initialize()
     {
         if (_cts != null) return;
@@ -93,9 +93,9 @@ public class InputListener
         listenForInputTask.Start();
     }
 
-    /*
-     * Terminates the input listening task. Useful for: cutscenes or other times where you want to make sure input is not detected
-     */
+    /// <summary>
+    /// Terminates the input listening task. Extremely useful for: cutscenes or other times where you want to make sure input is not detected
+    /// </summary>
     public void Terminate()
     {
         _cts?.Cancel();

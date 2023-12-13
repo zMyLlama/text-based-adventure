@@ -291,7 +291,7 @@ public class Battle
                         secondDmgMultiplier * 1);
 
                 OpponentPokemons[OpponentSelectedPokemon].hp -= damage;
-                if (OpponentPokemons[OpponentSelectedPokemon].hp >= 0)
+                if (OpponentPokemons[OpponentSelectedPokemon].hp <= 0)
                 {
                     OpponentPokemons[OpponentSelectedPokemon].hp = 0;
                     _battleInterface.EndBattleInterface(true);
