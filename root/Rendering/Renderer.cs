@@ -63,8 +63,17 @@ public class Renderer
         Console.SetCursorPosition(0, MainHeight + 2);
         Console.Write("> ");
     }
+
+    public void ClearViewport()
+    {
+        for (int i = 1; i <= MainHeight - 2; i++)
+        {
+            Console.SetCursorPosition(1, i);
+            Console.Write(new string(' ', MainWidth - 2));
+        }
+    }
     
-    public void Render(int x = 0, int y = 0)
+    public void Render(bool onlyFrame = false, bool alsoRenderLogs = false)
     {
         Console.SetCursorPosition(0, 0);
         for (int i = 0; i < MainHeight; i++)
@@ -72,7 +81,12 @@ public class Renderer
             if (i == 0)
             {
                 // TODO: Move city state to Player
-                const string cityState = "PALLET TOWN";
+                string cityState = _player.state switch
+                {
+                    PlayerStates.TOWN => "PALLET TOWN",
+                    PlayerStates.WILDERNESS => "WILDERNESS",
+                    _ => "IN BATTLE"
+                };;
                 
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("+―――― " + cityState + ' ' + new string('―', MainWidth - (7 + cityState.Length)) + "+" + _logsHeader);
@@ -96,42 +110,34 @@ public class Renderer
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("> ");
         
-        RenderMap();
+        if (!onlyFrame) RenderMap();
+        if (alsoRenderLogs) RenderLogs(Console.ForegroundColor);
     }
 
-    public void Log(string message, LogTypes type = LogTypes.DEFAULT)
+    public void RenderLogs(ConsoleColor restoreColor)
     {
-        Render();
-
-        ConsoleColor savedConsoleColor = Console.ForegroundColor;
-        int savedCaretXPos = Console.GetCursorPosition().Left;
-        int savedCaretYPos = Console.GetCursorPosition().Top;
+        if (_logs.Count == 0) return;
+        int prevHeight = -1;
         
-        switch (type)
+        switch (_logs[0].Substring(0, 3))
         {
-            case LogTypes.DEFAULT:
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                break;
-            case LogTypes.INFO:
-                message = "(?) " + message;
+            case "(?)":
                 Console.ForegroundColor = ConsoleColor.Blue;
                 break;
-            case LogTypes.ERROR:
-                message = "(!) " + message;
+            case "(!)":
                 Console.ForegroundColor = ConsoleColor.Red;
                 break;
+            default:
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                break;
         }
-        _logs.Insert(0, message);
-
-        string hourMinute = DateTime.Now.ToString("HH:mm");
-        int prevHeight = -1;
 
         foreach (string storedMessage in _logs)
         {
             int xPos = 0;
             int yPos = prevHeight + 2;
             if (yPos > MainHeight - 2) break;
-            string finalMessage = storedMessage + " (" + hourMinute + ")";
+            string finalMessage = storedMessage;
             for (int j = 0; j < finalMessage.Length; j++)
             {
                 char messagePiece = finalMessage[j];
@@ -162,8 +168,33 @@ public class Renderer
             Console.ForegroundColor = ConsoleColor.DarkGray;
             prevHeight += 2;
         }
-
-        Console.ForegroundColor = savedConsoleColor;
+        
+        Console.ForegroundColor = restoreColor;
         ResetCursorToDefault();
+    }
+
+    public void Log(string message, LogTypes type = LogTypes.DEFAULT, bool onlyFrame = false)
+    {
+        Render(onlyFrame);
+
+        ConsoleColor savedConsoleColor = Console.ForegroundColor;
+        
+        switch (type)
+        {
+            case LogTypes.DEFAULT:
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                break;
+            case LogTypes.INFO:
+                message = "(?) " + message;
+                Console.ForegroundColor = ConsoleColor.Blue;
+                break;
+            case LogTypes.ERROR:
+                message = "(!) " + message;
+                Console.ForegroundColor = ConsoleColor.Red;
+                break;
+        }
+        _logs.Insert(0, message);
+
+        RenderLogs(savedConsoleColor);
     }
 }

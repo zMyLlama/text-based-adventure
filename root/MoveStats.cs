@@ -2,6 +2,7 @@ namespace root;
 
 public class MoveStats
 {
+    public PokemonMoves moveUsed;
     public Types elementType;
     public int power;
     public int accuracy;
@@ -13,6 +14,8 @@ public class MoveStats
 
     public void PokeMoves(PokemonMoves move = PokemonMoves.TACKLE)
     {
+        moveUsed = move;
+        
         strongAgainst.Clear();
         weakAgainst.Clear();
         immuneAgainst.Clear();
@@ -36,7 +39,7 @@ public class MoveStats
                 break;
             case PokemonMoves.EMBER:
                 elementType = Types.FIRE;
-                power = 400;
+                power = 40;
                 accuracy = 100;
                 pp = 25;
                 strongAgainst.Add(Types.GRASS);

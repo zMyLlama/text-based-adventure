@@ -1,26 +1,22 @@
-﻿using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using root;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using root;
 
 Writer Writer = new Writer();
+Renderer Renderer = new Renderer();
+Player Player = new Player(Renderer);
+InputListener Listener = new InputListener(Renderer);
+
 Pokemon Pokemon = new Pokemon();
 MoveStats Moves = new MoveStats();
-Effectiveness Multiplier = new Effectiveness();
-Battle Battle = new Battle();
-
-List<Pokemon> YourPokemons = new List<Pokemon>();
-List<Pokemon> OpponentPokemons = new List<Pokemon>();
 
 ScreenSize();
-/*Battle.Fight(OpponentPokemons, YourPokemons);*/
 
 Writer.WriteToPosition("\n\n    ,'\\\n_.----.     ____         ,'  _\\   ___    ___     ____\n_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n                                `'                            '-._|", WritePositions.CENTER);
 Writer.WriteToPosition("\n", WritePositions.CENTER);
 
 CancellationTokenSource cts = new CancellationTokenSource();
 Task flickerStartTask = new Task(FlickerStart, cts.Token);
+Battle currentBattle;
+BattleInterface currentBattleInterface;
 flickerStartTask.Start();
 
 while (!flickerStartTask.IsCompleted)
@@ -50,6 +46,7 @@ void FlickerStart()
 
 void Start()
 {
+    Renderer.SetPlayer(Player);
     Listener.Initialize();
     
     Renderer.Render();
@@ -58,8 +55,28 @@ void Start()
     while (true) { ConsoleKeyInfo readKey = Console.ReadKey(true); }
 }
 
+void Encounter()
+{
+    BattleInterface battleInterface = new BattleInterface(Player, Renderer, Listener);
+    currentBattle = battleInterface.currentBattle;
+
+    Listener.InputEvent -= Battle!;
+    Listener.InputEvent += Battle!;
+}
+
+void Battle(object sender, InputEventArgs e)
+{
+    if (Player.state != PlayerStates.BATTLE) return;
+    if (e.Arg == null) return;
+    if (e.Type != InputEventTypes.BATTLE) return;
+    
+    currentBattle.Fight(e.Arg.ToUpper());
+}
+
 void Movement(object sender, InputEventArgs e)
 {
+    if (Player.state is not (PlayerStates.TOWN or PlayerStates.WILDERNESS)) return;
+    
     e.Arg ??= "1";
     if (!int.TryParse(e.Arg, out int offsetArg))
     {
@@ -67,26 +84,26 @@ void Movement(object sender, InputEventArgs e)
         return;
     }
 
+    bool encounter = false;
     offsetArg = Math.Clamp(offsetArg, 1, 10);
     
-    //Renderer.Log("CALLED: " + e.Arg.ToString());
     switch (e.Type)
     {
         case InputEventTypes.MOVEFORWARDS:
-            Player.Move(0, offsetArg);
+            encounter = Player.Move(0, offsetArg);
             break;
         case InputEventTypes.MOVEBACKWARDS:
-            Player.Move(0, -offsetArg);
+            encounter = Player.Move(0, -offsetArg);
             break;
         case InputEventTypes.MOVELEFT:
-            Player.Move(-offsetArg, 0);
+            encounter = Player.Move(-offsetArg, 0);
             break;
         case InputEventTypes.MOVERIGHT:
-            Player.Move(offsetArg, 0);
+            encounter = Player.Move(offsetArg, 0);
             break;
     }
     
-    Renderer.Log(e.Type.ToString(), LogTypes.INFO);
+    if (encounter) Encounter();
 }
 
 void ScreenSize()
@@ -111,20 +128,17 @@ void ScreenSize()
             Console.Clear();
         }
 
-        if (Console.KeyAvailable)
-        {
-            if (Console.ReadKey(true).Key == ConsoleKey.Enter)
-                break;
-        }
+        if (!Console.KeyAvailable) continue;
+        if (Console.ReadKey(true).Key == ConsoleKey.Enter)
+            break;
     }
-
 }
 
 void SelectStarterPokemon()
 {
-    Console.SetCursorPosition(0,0);
+    /*Console.SetCursorPosition(0,0);
     Writer.WriteToPosition("Welcome to Pokémon\nChoose your starter Pokémon!\n", WritePositions.CENTER);
-    Writer.WriteToPosition("Bulbasaur", WritePositions.MIDLEFT, false);
+    Writer.WriteToPosition("Bulbasaur", WritePositions.MIDRIGHT, false);
     Writer.WriteToPosition("Charmander", WritePositions.CENTER, false);
     Writer.WriteToPosition("Squirtle", WritePositions.MIDRIGHT);
     string choice = Console.ReadLine().ToLower();
@@ -141,5 +155,5 @@ void SelectStarterPokemon()
             break;
         default: SelectStarterPokemon();
             break;
-    }
+    }*/
 }

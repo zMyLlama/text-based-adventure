@@ -4,8 +4,11 @@ namespace root;
 
 public class Player
 {
+    private Random _rnd = new Random();
     private Renderer _renderer;
     public List<string> currentMap = RawMap.PALLET_TOWN;
+    public PlayerStates state = PlayerStates.TOWN;
+    public List<Pokemon> pokemons = new List<Pokemon>();
     public int xPosition = 0;
     public int yPosition = 0;
 
@@ -39,9 +42,33 @@ public class Player
         return currentMap[Math.Clamp(y, 0, currentMap.Count - 1)][Math.Clamp(x, 0, currentMap[0].Length)];
     }
     
-    public void Move(int xOffset = 0, int yOffset = 0, bool dontRender = false)
+    /// <summary>
+    /// Moves the player by the specified amount. Also takes into acount boundaries and other collider.
+    /// Since it fits nicely it also checks for encounters in tall grass.
+    /// </summary>
+    /// <param name="xOffset">Amount to move the player by on the x-axis</param>
+    /// <param name="yOffset">Amount to move the player by on the y-axis</param>
+    /// <param name="dontRender">If this is true then the program will not rerender the viewport when the player has moved</param>
+    /// <returns>A boolean indicating if the player encountered a pokemon in tall grass.</returns>
+    public bool Move(int xOffset = 0, int yOffset = 0, bool dontRender = false)
     {
-        if (xOffset != 0) for (int i = 0; i < xOffset; i++) if (IsMapColliderAtPosition(xPosition + i, yPosition)) xOffset = i;
+        bool encounter = false;
+        ConsoleColor savedConsoleColor = Console.ForegroundColor;
+        
+        if (xOffset != 0)
+        {
+            for (int i = 0; i < xOffset; i++)
+            {
+                if (GetCharAtPosition(xPosition + i, yPosition) == ';' && _rnd.Next(1,256) < 25)
+                {
+                    _renderer.Log("ENCOUNTER!!!", LogTypes.INFO);
+                    encounter = true;
+                    xOffset = i;
+                    break;
+                }
+                if (IsMapColliderAtPosition(xPosition + i, yPosition)) xOffset = i;
+            }
+        }
         if (yOffset != 0)
         {
             for (int i = 1; i <= Math.Abs(yOffset); i++)
@@ -57,7 +84,14 @@ public class Player
         xPosition = Math.Clamp(xPosition + xOffset, 0, currentMap[0].Length);
         yPosition = Math.Clamp(-yOffset + yPosition, 0, currentMap.Count - 1);
 
-        if (dontRender) return;
+        if (dontRender)
+        {
+            _renderer.RenderLogs(savedConsoleColor);
+            return encounter;
+        }
         _renderer.Render();
+        _renderer.RenderLogs(savedConsoleColor);
+
+        return encounter;
     }
 }

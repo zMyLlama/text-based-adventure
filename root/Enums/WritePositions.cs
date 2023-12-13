@@ -6,5 +6,5 @@ public enum WritePositions
     CENTER,
     RIGHT,
     MIDLEFT,
-    MIDRIGHT
+    MIDRIGHT,
 }

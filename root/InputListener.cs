@@ -42,7 +42,6 @@ public class InputListener
             if (_cts.IsCancellationRequested) return;
             if (readLine == null) continue;
 
-            _renderer.Log(readLine.Split(" ").Length.ToString());
             string[] actions = readLine.Split(" ");
             
             string primaryAction = actions[0];
@@ -100,5 +99,6 @@ public class InputListener
     public void Terminate()
     {
         _cts?.Cancel();
+        _cts = null;
     }
 }
