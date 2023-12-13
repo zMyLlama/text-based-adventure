@@ -25,8 +25,9 @@ public class Battle
     private BattleInterface _battleInterface;
     private Renderer _renderer;
     private InputListener _input;
-    
-    public Battle(List<Pokemon> opponentPokemons, List<Pokemon> playerPokemons, BattleInterface battleInterface, Renderer renderer, InputListener input)
+
+    public Battle(List<Pokemon> opponentPokemons, List<Pokemon> playerPokemons, BattleInterface battleInterface,
+        Renderer renderer, InputListener input)
     {
         OpponentPokemons = opponentPokemons;
         PlayerPokemons = playerPokemons;
@@ -35,7 +36,11 @@ public class Battle
         _input = input;
     }
 
-    public void Fight(string command)
+    /// <summary>
+    /// Funktionen modtager et angreb. Derefter ser den om Pokémonen der prøver at udføre angrebet har det. Hvis alting lykkedes angriber pokemonen med det valgte angreb og modstanderen tager skade.
+    /// </summary>
+    /// <param name="command">er det angreb som Pokémonen skal bruge.</param>
+    public void Fight(string command) 
     {
         switch (command)
         {
@@ -303,6 +308,10 @@ public class Battle
         }
     }
 
+    /// <summary>
+    /// Denne funktion sørger for at modstanderens Pokémon bruger et tilfældigt angreb til at angribe med. (Ligesom i de rigtige spil).
+    /// </summary>
+    /// <param name="opponentPokemon">er den af modstanderens Pokémons der er i kamp.</param>
     public void OpponentsMove(Pokemon opponentPokemon)
     {
         Random rnd = new Random();
