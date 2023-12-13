@@ -13,5 +13,6 @@ public enum PokemonMoves
     EMBER,
     BUBBLE,
     STRING_SHOT,
-    POSION_STING
+    POISON_STING,
+    WATER_GUN
 }

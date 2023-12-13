@@ -1,28 +1,25 @@
-﻿using System.Net.Security;
-using root;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using root;
 
-
+/*
+ * Initializes the needed classes for the game to work.
+ * Kind of like making a bunch of empty helpers in unity.
+ */
 Writer Writer = new Writer();
+Renderer Renderer = new Renderer();
+Player Player = new Player(Renderer);
+InputListener Listener = new InputListener(Renderer);
+
 Pokemon Pokemon = new Pokemon();
 MoveStats Moves = new MoveStats();
-Effectiveness multiplier = new Effectiveness();
-
-
-List<Pokemon> YourPokemons = new List<Pokemon>();
-List<Pokemon> OpponentPokemons = new List<Pokemon>();
-float criticalHit = 1f;
-
 
 ScreenSize();
-Battle();
 
 Writer.WriteToPosition("\n\n    ,'\\\n_.----.     ____         ,'  _\\   ___    ___     ____\n_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n                                `'                            '-._|", WritePositions.CENTER);
 Writer.WriteToPosition("\n", WritePositions.CENTER);
 
 CancellationTokenSource cts = new CancellationTokenSource();
 Task flickerStartTask = new Task(FlickerStart, cts.Token);
+Battle currentBattle;
 flickerStartTask.Start();
 
 while (!flickerStartTask.IsCompleted)
@@ -52,12 +49,64 @@ void FlickerStart()
 
 void Start()
 {
-    Writer.WriteToPosition("\nWelcome!\nType *anything* to begin!", WritePositions.CENTER);
+    Renderer.SetPlayer(Player);
+    Listener.Initialize();
+    
+    Renderer.Render();
+    Listener.InputEvent += Movement!;
 
-    /*Pokemon.PokemonWithStats(PokemonNames.BULBASAUR);
-    int damage = Convert.ToInt16(2f + 0.4f * Pokemon.level * Pokemon.attack * Moves.power / Pokemon.defense / 50f + 2f);
-    Writer.WriteToPosition("Damage: " + damage,WritePositions.LEFT);*/
+    while (true) { ConsoleKeyInfo readKey = Console.ReadKey(true); }
+}
 
+void Encounter()
+{
+    BattleInterface battleInterface = new BattleInterface(Player, Renderer, Listener);
+    currentBattle = battleInterface.currentBattle;
+
+    Listener.InputEvent -= Battle!;
+    Listener.InputEvent += Battle!;
+}
+
+void Battle(object sender, InputEventArgs e)
+{
+    if (Player.state != PlayerStates.BATTLE) return;
+    if (e.Arg == null) return;
+    if (e.Type != InputEventTypes.BATTLE) return;
+    
+    currentBattle.Fight(e.Arg.ToUpper());
+}
+
+void Movement(object sender, InputEventArgs e)
+{
+    if (Player.state is not (PlayerStates.TOWN or PlayerStates.WILDERNESS)) return;
+    
+    e.Arg ??= "1";
+    if (!int.TryParse(e.Arg, out int offsetArg))
+    {
+        Renderer.Log("Du kan ikke rykke dig den angivne distance", LogTypes.ERROR);
+        return;
+    }
+
+    bool encounter = false;
+    offsetArg = Math.Clamp(offsetArg, 1, 10);
+    
+    switch (e.Type)
+    {
+        case InputEventTypes.MOVEFORWARDS:
+            encounter = Player.Move(0, offsetArg);
+            break;
+        case InputEventTypes.MOVEBACKWARDS:
+            encounter = Player.Move(0, -offsetArg);
+            break;
+        case InputEventTypes.MOVELEFT:
+            encounter = Player.Move(-offsetArg, 0);
+            break;
+        case InputEventTypes.MOVERIGHT:
+            encounter = Player.Move(offsetArg, 0);
+            break;
+    }
+    
+    if (encounter) Encounter();
 }
 
 void ScreenSize()
@@ -82,46 +131,32 @@ void ScreenSize()
             Console.Clear();
         }
 
-        if (Console.KeyAvailable)
-        {
-            if (Console.ReadKey(true).Key == ConsoleKey.Enter)
-                break;
-        }
-
+        if (!Console.KeyAvailable) continue;
+        if (Console.ReadKey(true).Key == ConsoleKey.Enter)
+            break;
     }
-
 }
 
-void Battle()
+/*void SelectStarterPokemon()
 {
-    /*/*YourPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
-    OpponentPokemons.Insert(0,new Pokemon(PokemonNames.BULBASAUR));
-    
-    BattleInterface();
-    while (OpponentPokemons[0].hp > 0)
+    Console.SetCursorPosition(0,0);
+    Writer.WriteToPosition("Welcome to Pokémon\nChoose your starter Pokémon!\n", WritePositions.CENTER);
+    Writer.WriteToPosition("Bulbasaur", WritePositions.MIDRIGHT, false);
+    Writer.WriteToPosition("Charmander", WritePositions.CENTER, false);
+    Writer.WriteToPosition("Squirtle", WritePositions.MIDRIGHT);
+    string choice = Console.ReadLine().ToLower();
+    switch (choice)
     {
-        string command = Console.ReadLine();
-        if (command == "tackle")
-        {
-            Random rnd = new Random();
-            criticalHit = rnd.Next(1 , 255);
-            if (criticalHit < YourPokemons[0].speed / 2)
-                criticalHit = 1.5f;
-            else
-                criticalHit = 1f;
-            /*int damage = Convert.ToInt16(((2 * YourPokemons[0].level * criticalHit / 5 + 2) * YourPokemons[0].Move1.power * YourPokemons[0].attack / OpponentPokemons[0].defense / 50 + 2) * 1 * multiplier.Effective(YourPokemons[0].Move1.type,OpponentPokemons[0].type1) * 1 * 1);#2#
-            OpponentPokemons[0].hp -= damage;
-            Console.Clear();
-            BattleInterface();#1#
-        }
-    }*/
-}
-
-void BattleInterface()
-{
-    Writer.WriteToPosition("" + OpponentPokemons[0].name,WritePositions.CENTER, false);
-    Writer.WriteToPosition("HP: " + OpponentPokemons[0].hp + "\n\n\n\n\n" ,WritePositions.MIDLEFT);
-    Writer.WriteToPosition("" + YourPokemons[0].name,WritePositions.LEFT, false);
-    Writer.WriteToPosition("HP: " + YourPokemons[0].hp,WritePositions.MIDLEFT);
-
-}
+        case "bulbasaur":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.BULBASAUR));
+            break;
+        case "charmander":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.CHARMANDER));
+            break;
+        case "squirtle":
+            YourPokemons.Insert(0, new Pokemon(PokemonNames.SQUIRTLE));
+            break;
+        default: SelectStarterPokemon();
+            break;
+    }
+}*/
