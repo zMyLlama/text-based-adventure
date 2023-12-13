@@ -2,6 +2,12 @@
 
 public class Writer
 {
+    /// <summary>
+    /// Denne funktion modtager den besked der skal skrives, positionen den skal skrives på, og om den bagefter skal lave en ny linje.
+    /// </summary>
+    /// <param name="message">er den besked der skal skrives.</param>
+    /// <param name="position">bestemmer hvor på skærmen teksten skal skrives.</param>
+    /// <param name="newLine">bestemmer om næste besked der sendes er på samme linje eller en ny linje.</param>
     public void WriteToPosition(string message, WritePositions position = WritePositions.LEFT, bool newLine = true)
     {
         string[] messages = message.Split("\n");
